@@ -44,3 +44,22 @@ class SplitMNIST(Dataset):
 
     def __len__(self):
         return len(self.data)
+
+
+class ReshapeTransform:
+    def __init__(self, new_shape):
+        self.new_shape = new_shape
+
+    def __call__(self, x):
+        return x.view(self.new_shape)
+
+
+# Compute the data range
+def compute_dataset_range(dataset):
+    data_max = -np.ones(dataset[0][0].shape, dtype=np.float64)*np.inf
+    data_min = np.ones_like(data_max)*np.inf
+    for i in tqdm.tqdm(range(len(dataset))):
+        x = mnist_train[i][0].numpy()
+        data_max = np.maximum(data_max, x)
+        data_min = np.minimum(data_min, x)
+    return data_max - data_min
