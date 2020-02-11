@@ -13,19 +13,35 @@ from typing import List
 
 def instantiate_MLP_model():
     return nn.Sequential(
-          nn.Linear(28*28, 200, bias=True),
-          nn.BatchNorm1d(200),
-          nn.ReLU(),
-          nn.Linear(200, 200, bias=True),
-          nn.BatchNorm1d(200),
-          nn.ReLU(),
-          nn.Linear(200, 200, bias=True),
-          nn.BatchNorm1d(200),
-          nn.ReLU(),
-          nn.Linear(200, 200, bias=True),
-          nn.BatchNorm1d(200),
-          nn.ReLU(),
-          nn.Linear(200, 10)
+        nn.Linear(28*28, 200, bias=True),
+        nn.BatchNorm1d(200),
+        nn.ReLU(),
+        nn.Linear(200, 200, bias=True),
+        nn.BatchNorm1d(200),
+        nn.ReLU(),
+        nn.Linear(200, 200, bias=True),
+        nn.BatchNorm1d(200),
+        nn.ReLU(),
+        nn.Linear(200, 10)
+        )
+
+
+def instantiate_dropout_MLP(dropout_rate):
+    return nn.Sequential(
+        nn.Dropout(p=dropout_rate),
+        nn.Linear(28*28, 200, bias=True),
+        nn.BatchNorm1d(200),
+        nn.ReLU(),
+        nn.Dropout(p=dropout_rate),
+        nn.Linear(200, 200, bias=True),
+        nn.BatchNorm1d(200),
+        nn.ReLU(),
+        nn.Dropout(p=dropout_rate),
+        nn.Linear(200, 200, bias=True),
+        nn.BatchNorm1d(200),
+        nn.ReLU(),
+        nn.Dropout(p=dropout_rate),
+        nn.Linear(200, 10)
         )
 
 
