@@ -26,23 +26,30 @@ def instantiate_MLP_model():
         )
 
 
-def instantiate_dropout_MLP(dropout_rate):
-    return nn.Sequential(
-        nn.Dropout(p=dropout_rate),
-        nn.Linear(28*28, 200, bias=True),
-        nn.BatchNorm1d(200),
-        nn.ReLU(),
-        nn.Dropout(p=dropout_rate),
-        nn.Linear(200, 200, bias=True),
-        nn.BatchNorm1d(200),
-        nn.ReLU(),
-        nn.Dropout(p=dropout_rate),
-        nn.Linear(200, 200, bias=True),
-        nn.BatchNorm1d(200),
-        nn.ReLU(),
-        nn.Dropout(p=dropout_rate),
-        nn.Linear(200, 10)
-        )
+class MCDropoutMLP(nn.Module):
+    def __init__(self, dropout_rate=0.1):
+        self.dropout_rate = dropout_rate
+        self.linear1 = nn.Linear(28*28, 200, bias=True)
+        self.linear2 = nn.Linear(200, 200, bias=True)
+        self.linear3 = nn.Linear(200, 200, bias=True)
+        self.linear4 = nn.Linear(200, 10)
+        self.batch_norm1 = nn.BatchNorm1d(200)
+        self.batch_norm2 = nn.BatchNorm1d(200)
+        self.batch_norm3 = nn.BatchNorm1d(200)
+
+    def forward(self, x):
+        # Hidden layer 1
+        x = F.relu(self.batch_norm1(self.linear1(x)))
+        x = F.dropout(x, p=self.dropout_rate)
+        # Hidden layer 2
+        x = F.relu(self.batch_norm2(self.linear2(x)))
+        x = F.dropout(x, p=self.dropout_rate)
+        # Hidden layer 3
+        x = F.relu(self.batch_norm3(self.linear3(x)))
+        x = F.dropout(x, p=self.dropout_rate)
+        # Output layer
+        x = self.linear4(x)
+        return x
 
 
 class Ensemble(object):
