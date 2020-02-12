@@ -1,5 +1,6 @@
 import torch
 import torchvision.datasets
+import numpy as np
 from torch.utils.data import Dataset
 from typing import List
 from PIL import Image
@@ -59,7 +60,7 @@ def compute_dataset_range(dataset):
     data_max = -np.ones(dataset[0][0].shape, dtype=np.float64)*np.inf
     data_min = np.ones_like(data_max)*np.inf
     for i in tqdm.tqdm(range(len(dataset))):
-        x = mnist_train[i][0].numpy()
+        x = dataset[i][0].numpy()
         data_max = np.maximum(data_max, x)
         data_min = np.minimum(data_min, x)
     return data_max - data_min
