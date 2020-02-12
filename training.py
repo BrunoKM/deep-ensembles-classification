@@ -145,7 +145,7 @@ class AdversarialTrainer(Trainer):
         self.data_range=data_range
         self.adv_epsilon=adv_example_epsilon
         if adv_example_type == 'fgsm':
-            self.adv_attack = fgsm_attach
+            self.adv_attack = fgsm_attack
         elif adv_example_type == 'rand':
             self.adv_attack = random_attack
         else:
@@ -171,7 +171,7 @@ class AdversarialTrainer(Trainer):
             self.optimizer.step()
             inputs_grad = inputs.grad.data
 
-            perturbed_inputs = fgsm_attack(inputs, self.data_range*self.adv_epsilon, inputs_grad)
+            perturbed_inputs = self.adv_attack(inputs, self.data_range*self.adv_epsilon, inputs_grad)
             adv_outputs = self.model(perturbed_inputs)
             adv_loss = self.criterion(adv_outputs, labels)
             adv_loss.backward()  # Add the adversarial loss to the gradient
